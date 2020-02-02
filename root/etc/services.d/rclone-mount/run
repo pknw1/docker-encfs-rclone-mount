@@ -1,0 +1,14 @@
+#!/usr/bin/with-contenv sh
+
+umask 022
+
+if [ -z "$RCLONE_REMOTE_MOUNT" ]; then
+  echo "Error: RCLONE_REMOTE_MOUNT environment variable was not passed to the container."
+  exit 1
+fi
+
+mount_command="rclone mount --config=/config/.rclone.conf --uid=$PUID --gid=$PGID --umask=$PUMASK --allow-other $RCLONE_MOUNT_OPTIONS $RCLONE_REMOTE_MOUNT /data"
+
+echo "Executing => $mount_command"
+exec \
+	s6-setuidgid abc $mount_command

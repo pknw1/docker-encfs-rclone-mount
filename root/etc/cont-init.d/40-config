@@ -1,0 +1,12 @@
+#!/usr/bin/with-contenv sh
+
+# create empty config file
+touch /config/.rclone.conf
+
+# permissions
+chown abc:abc \
+	/config/.rclone.conf
+
+if [ ! -d /data-decrypted ]; then mkdir -p /data-decrypted; fi
+chown abc:abc \
+	/data-decrypted

@@ -1,0 +1,25 @@
+version: '3'
+services:
+  rclone-mount:
+    image: pknw1/encfs-rclone-mount
+    container_name: encfs-rclone-mount
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - "/dev/fuse:/dev/fuse"
+    environment:
+      - PUID=666
+      - PGID=666
+      - PUMASK=0000
+      - TZ=Europe/London
+      - RCLONE_REMOTE_MOUNT=remote:/
+    volumes:
+      - ./config/encfs-rclone-mount:/config
+      - /mnt/rclone-mount:/data:shared
+      - /mnt/encfs-rclone-mount:/data-decrypted:shared
+      - /tmp:/tmp
+      - /etc/localtime:/etc/localtime
+    restart: unless-stopped
+

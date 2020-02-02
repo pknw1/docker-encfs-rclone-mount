@@ -1,0 +1,21 @@
+#!/usr/bin/with-contenv sh
+
+umask 022
+RCLONE_MOUNT=$(mount | grep rclone)
+
+if [ -z "$RCLONE_MOUNT" ]; then
+  echo "Error: Rclone is not mounted."
+  exit 1
+fi
+
+if [ ! -f /data/.encfs6.xml ]; then
+  echo "no encfs config- not attempting to decrypt"
+  exit 0
+fi
+
+export ENCFS6_CONFIG=/data/.encfs6.xml
+mount_command="encfs -f -o allow_other -o uid=666 -o gid=666 --extpass=/config/encfs-password /data /data-decrypted"
+
+echo "Executing => $mount_command"
+exec \
+	s6-setuidgid abc $mount_command

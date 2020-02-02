@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv sh
+
+# unmount fuse
+fusermount -u -z /data-decrypted
+fusermount -u -z /data
